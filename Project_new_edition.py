@@ -1,7 +1,7 @@
 
 from tkinter import *
 from tkinter import ttk
-from tkinter import messagebox
+from textwrap import wrap
 import tkinter as tk
 import sqlite3
 window=Tk()
@@ -18,9 +18,16 @@ def click():
     tree.heading("#2", text="Вопрос")
     tree.heading("#3",text="Ответ")
     tree.pack()
+    root.update()
+    width=tree.winfo_width()
     con1=sqlite3.connect("questions.db")
     cur1=con1.cursor()
-    cur1.execute("SELECT *FROM interview_question")
+    if width>600:
+        char_width=cur1.execute("SELECT answer FROM interview_question ")
+        a=char_width.fetchall()
+        print(*a)
+        print(len(*a))
+    cur1.execute("SELECT * FROM interview_question")
     rows=cur1.fetchall()
     for row in rows:
         print(row)
