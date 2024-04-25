@@ -1,38 +1,32 @@
-
 from tkinter import *
-from tkinter import ttk
 from textwrap import wrap
 import tkinter as tk
 import sqlite3
 window=Tk()
 window.title("Вопросы к собеседованию ")
-window.geometry("450x100")
+w=window.winfo_screenwidth()
+h=window.winfo_screenheight()
+w=w//2
+h=h//2
+w=w-200
+h=h-200
+window.geometry(f"450x100+{w}+{h}")
 def click():
-    root=tk.Tk()
-    root.title("Вопросы")
-    root.geometry("1500x1500")
-    tree=ttk.Treeview(root, column=("c1","c2","c3"), show="headings")
-    tree.column("#1",anchor=tk.CENTER)
-    tree.heading("#1",text="Номер вопроса")
-    tree.column("#2",anchor=tk.CENTER)
-    tree.heading("#2", text="Вопрос")
-    tree.heading("#3",text="Ответ")
-    tree.pack()
-    root.update()
-    width=tree.winfo_width()
-    con1=sqlite3.connect("questions.db")
-    cur1=con1.cursor()
-    if width>600:
-        char_width=cur1.execute("SELECT answer FROM interview_question ")
-        a=char_width.fetchall()
-        print(*a)
-        print(len(*a))
-    cur1.execute("SELECT * FROM interview_question")
-    rows=cur1.fetchall()
-    for row in rows:
-        print(row)
-        tree.insert("",tk.END,values=row)
-    con1.close()
+    questions_editor=Text(height=5,wrap="word")
+    questions_editor.pack(anchor=N,fill=X)
+    word_editor=Text(height=5,wrap="word")
+    word_editor.pack(anchor=S,fill=X)
+    with sqlite3.connect("C:\Python\pet_project\pet_project\questions.db") as db:
+        cursor=db.cursor()
+        cursor.execute("SELECT question FROM interview_question")
+    for rows in cursor.fetchall():
+        print(rows)
+        questions_editor.insert("1.0",*rows)
+    db.close()
+
+                         
+
+   
     
 button1=Button(text="Let's go!", command= click)
 button1.place(x=50,y=20,width=100, height=25)# попробуй grid
